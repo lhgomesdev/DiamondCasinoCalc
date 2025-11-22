@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Diamond Casino</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: '#d4af37',
+                        'gold-dim': '#8a7224',
+                        purple: '#9b59b6',
+                        dark: '#0f0f0f',
+                        panel: '#1a1a1a',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-white min-h-screen flex justify-center p-4 sm:p-6">
+
+<div class="w-full max-w-6xl">
+
+    <header class="text-center mb-8 border-b border-gray-800 pb-6">
+        <div class="flex items-center justify-center gap-3 text-gold mb-2">
+            <i class="fas fa-gem text-3xl"></i>
+            <h1 class="text-3xl font-extrabold tracking-widest uppercase">Diamond Casino</h1>
+        </div>
+        <p class="text-gray-400 text-sm font-medium">Planejador de Golpe</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section class="bg-panel border border-gray-800 rounded-xl p-6 shadow-2xl">
+            <h2 class="text-lg font-bold text-purple mb-6 flex items-center gap-2 uppercase tracking-wide">
+                <i class="fas fa-vault"></i> O Cofre
+            </h2>
+
+            <div id="target-options" class="grid grid-cols-2 gap-3 mb-6"></div>
+
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center justify-between bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                    <label class="flex items-center gap-2 text-sm text-gray-300 font-medium cursor-pointer select-none" for="hard-mode">
+                        <i class="fas fa-skull text-red-500"></i> Modo Difícil
+                    </label>
+                    <div class="relative inline-block w-12 h-6 align-middle select-none">
+                        <input type="checkbox" id="hard-mode" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out left-0 top-0 checked:translate-x-full checked:bg-red-500">
+                        <label for="hard-mode" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-700 cursor-pointer"></label>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                    <label class="flex items-center gap-2 text-sm text-gray-300 font-medium cursor-pointer select-none" for="elite-mode">
+                        <i class="fas fa-stopwatch text-blue-400"></i> Elite (+100k)
+                    </label>
+                    <div class="relative inline-block w-12 h-6 align-middle select-none">
+                        <input type="checkbox" id="elite-mode" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out left-0 top-0 checked:translate-x-full checked:bg-blue-500">
+                        <label for="elite-mode" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-700 cursor-pointer"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs text-gray-500 uppercase font-bold mb-2 ml-1">
+                    <i class="fas fa-user-tie mr-1"></i> Comprador
+                </label>
+                <div class="flex gap-2">
+                    <button class="buyer-btn flex-1 py-2 px-1 rounded-lg border-2 border-gray-700 text-gray-500 text-xs font-bold hover:bg-gray-800 transition-all data-[active=true]:bg-red-500/20 data-[active=true]:border-red-500 data-[active=true]:text-red-500" onclick="setBuyer('low')" data-level="low">
+                        Baixo<br><span class="text-[10px] opacity-75">-10%</span>
+                    </button>
+                    <button class="buyer-btn flex-1 py-2 px-1 rounded-lg border-2 border-gray-700 text-gray-500 text-xs font-bold hover:bg-gray-800 transition-all data-[active=true]:bg-yellow-500/20 data-[active=true]:border-yellow-500 data-[active=true]:text-yellow-500" onclick="setBuyer('mid')" data-level="mid">
+                        Médio<br><span class="text-[10px] opacity-75">-5%</span>
+                    </button>
+                    <button class="buyer-btn flex-1 py-2 px-1 rounded-lg border-2 border-gray-700 text-gray-500 text-xs font-bold hover:bg-gray-800 transition-all data-[active=true]:bg-green-500/20 data-[active=true]:border-green-500 data-[active=true]:text-green-500 active" onclick="setBuyer('high')" data-level="high" data-active="true">
+                        Alto<br><span class="text-[10px] opacity-75">0%</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-panel border border-gray-800 rounded-xl p-6 shadow-2xl">
+            <h2 class="text-lg font-bold text-purple mb-6 flex items-center gap-2 uppercase tracking-wide">
+                <i class="fas fa-users"></i> Equipe
+            </h2>
+
+            <div class="space-y-5">
+                <div class="group">
+                    <label class="block text-xs text-gray-500 uppercase font-bold mb-2 ml-1 group-focus-within:text-gold transition-colors">
+                        <i class="fas fa-laptop-code mr-1"></i> Hacker
+                    </label>
+                    <select id="hacker-select" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg p-3 outline-none focus:border-gold transition-colors text-sm"></select>
+                </div>
+
+                <div class="group">
+                    <label class="block text-xs text-gray-500 uppercase font-bold mb-2 ml-1 group-focus-within:text-gold transition-colors">
+                        <i class="fas fa-crosshairs mr-1"></i> Atirador
+                    </label>
+                    <select id="gunman-select" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg p-3 outline-none focus:border-gold transition-colors text-sm"></select>
+                </div>
+
+                <div class="group">
+                    <label class="block text-xs text-gray-500 uppercase font-bold mb-2 ml-1 group-focus-within:text-gold transition-colors">
+                        <i class="fas fa-car mr-1"></i> Piloto
+                    </label>
+                    <select id="driver-select" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg p-3 outline-none focus:border-gold transition-colors text-sm"></select>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-panel border border-gray-800 rounded-xl p-6 shadow-2xl flex flex-col">
+            <h2 class="text-lg font-bold text-purple mb-6 flex items-center gap-2 uppercase tracking-wide">
+                <i class="fas fa-handshake"></i> Divisão
+            </h2>
+
+            <div class="flex items-center justify-between mb-6">
+                <span class="text-sm text-gray-400 font-medium">Jogadores:</span>
+                <div class="flex gap-1 bg-gray-800 rounded-lg p-1">
+                    <button class="p-btn px-4 py-1 rounded text-sm font-bold text-gray-500 hover:text-white transition-colors" onclick="setPlayers(2)" data-count="2">2</button>
+                    <button class="p-btn px-4 py-1 rounded text-sm font-bold text-gray-500 hover:text-white transition-colors" onclick="setPlayers(3)" data-count="3">3</button>
+                    <button class="p-btn px-4 py-1 rounded text-sm font-bold text-gray-500 hover:text-white transition-colors" onclick="setPlayers(4)" data-count="4">4</button>
+                </div>
+            </div>
+
+            <div id="players-container" class="space-y-4 mb-6"></div>
+
+            <div class="text-right text-xs font-bold mb-6">
+                Total: <span id="total-split-display" class="text-green-500">100%</span>
+            </div>
+
+            <div class="border-t border-gray-700 my-4"></div>
+
+            <div class="space-y-2 text-sm flex-grow">
+                <div class="flex justify-between text-gray-400">
+                    <span>Bruto</span>
+                    <span id="val-gross" class="text-white">$0</span>
+                </div>
+                <div class="flex justify-between text-red-400/80 text-xs">
+                    <span>Taxa Lavagem</span>
+                    <span id="val-buyer-fee">-$0</span>
+                </div>
+                <div class="flex justify-between text-red-400/80 text-xs">
+                    <span>Taxas Equipe</span>
+                    <span id="val-deductions">-$0</span>
+                </div>
+                <div class="flex justify-between text-blue-400 text-xs">
+                    <span>Bônus Elite</span>
+                    <span id="val-elite">+$0</span>
+                </div>
+            </div>
+
+            <div id="final-payouts-list" class="mt-6 pt-4 border-t-2 border-dashed border-gray-700 space-y-3"></div>
+
+        </section>
+    </div>
+    <footer class="mt-16 text-center text-gray-600 text-sm font-medium">
+        <p>
+            Criado por
+            <a href="https://github.com/lhgomesdev" target="_blank" class="text-gold hover:text-white transition-colors duration-200 ml-1">
+                <i class="fab fa-github mr-1"></i>lhgomesdev
+            </a>
+        </p>
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
