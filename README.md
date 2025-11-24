@@ -1,5 +1,7 @@
 # 💎 Diamond Casino Heist Calculator
 
+# 🛠️ [SITE](https://lhgomesdev.github.io/DiamondCasinoCalc/)
+
 Uma ferramenta web moderna e responsiva desenvolvida para ajudar os jogadores de **Grand Theft Auto Online (GTAO)** a planear e calcular os ganhos finais do **Golpe ao Diamond Casino**.
 
 Esta calculadora permite simular diferentes cenários, escolhendo alvos, membros da equipa e divisões de percentagem para estimar o lucro líquido exato para cada jogador.
@@ -39,8 +41,6 @@ Com base na análise do código fonte, a aplicação oferece:
 ├── LICENSE
 └── README.md
 ```
-
-# 🛠️ [SITE](https://lhgomesdev.github.io/DiamondCasinoCalc/)
 
 ## 🧮 Lógica de Cálculo
 
