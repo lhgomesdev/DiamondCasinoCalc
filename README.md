@@ -40,7 +40,7 @@ Com base na análise do código fonte, a aplicação oferece:
 └── README.md
 ```
 
-## 🛠️ [https://lhgomesdev.github.io/DiamondCasinoCalc/](SITE)
+# 🛠️ [SITE](https://lhgomesdev.github.io/DiamondCasinoCalc/)
 
 ## 🧮 Lógica de Cálculo
 
