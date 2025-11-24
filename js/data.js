@@ -7,11 +7,11 @@ const gameData = {
     ],
     crew: {
         hacker: [
-            { name: "Avi Schwartzman (10%)", cut: 0.10 },
-            { name: "Paige Harris (9%)", cut: 0.09 },
-            { name: "Christian Feltz (7%)", cut: 0.07 },
-            { name: "Yohan Blair (5%)", cut: 0.05 },
-            { name: "Rickie Luckens (3%)", cut: 0.03 }
+            { name: "Avi Schwartzman (10%)", cut: 0.10, time: "3:30" },
+            { name: "Paige Harris (9%)", cut: 0.09, time: "3:25" },
+            { name: "Christian Feltz (7%)", cut: 0.07, time: "2:59" },
+            { name: "Yohan Blair (5%)", cut: 0.05, time: "2:52" },
+            { name: "Rickie Luckens (3%)", cut: 0.03, time: "2:26" }
         ],
         gunman: [
             { name: "Chester McCoy (10%)", cut: 0.10 },

@@ -2,6 +2,7 @@ const ui = {
     init: function() {
         this.renderTargets();
         this.populateSelects();
+        this.renderHackerLegend();
         this.setupListeners();
         this.setPlayers(2);
         this.update();
@@ -34,6 +35,25 @@ const ui = {
             el.innerText = opt.name;
             if (opt.cut === defaultValue) el.selected = true;
             select.appendChild(el);
+        });
+    },
+
+    renderHackerLegend: function() {
+        const list = document.getElementById('hacker-legend-list');
+        list.innerHTML = '';
+
+        gameData.crew.hacker.forEach(h => {
+            const li = document.createElement('li');
+            li.className = "flex justify-between border-b border-gray-800 pb-1 last:border-0 last:pb-0";
+
+            const shortName = h.name.split('(')[0].trim();
+            const percentage = h.name.match(/\(([^)]+)\)/)[1];
+
+            li.innerHTML = `
+                <span>${shortName} <span class="text-gray-600 text-[10px]">(${percentage})</span></span>
+                <span class="text-gray-300 font-mono">${h.time}</span>
+            `;
+            list.appendChild(li);
         });
     },
 
@@ -89,7 +109,7 @@ const ui = {
             }
         });
 
-        if (num === 2) { state.players[0].cut = 85; state.players[1].cut = 15; }
+        if (num === 2) { state.players[0].cut = 50; state.players[1].cut = 50; }
         if (num === 3) { state.players[0].cut = 40; state.players[1].cut = 30; state.players[2].cut = 30; }
         if (num === 4) { state.players[0].cut = 25; state.players[1].cut = 25; state.players[2].cut = 25; state.players[3].cut = 25; }
 
