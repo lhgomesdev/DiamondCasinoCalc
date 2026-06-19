@@ -1,9 +1,9 @@
 const gameData = {
     targets: [
-        { id: "cash", name: "Dinheiro", icon: "fa-money-bill", valNormal: 2115000, valHard: 2326500 },
-        { id: "artwork", name: "Arte", icon: "fa-palette", valNormal: 2350000, valHard: 2585000 },
-        { id: "gold", name: "Ouro", icon: "fa-bars", valNormal: 2585000, valHard: 2843500 },
-        { id: "diamonds", name: "Diamantes", icon: "fa-gem", valNormal: 3290000, valHard: 3619000 }
+        { id: "cash", name: "DINHEIRO", icon: "fa-money-bill", valNormal: 2115000, valHard: 2326500 },
+        { id: "artwork", name: "ARTE", icon: "fa-palette", valNormal: 2350000, valHard: 2585000 },
+        { id: "gold", name: "OURO", icon: "fa-bars", valNormal: 2585000, valHard: 2843500 },
+        { id: "diamonds", name: "DIAMANTES", icon: "fa-gem", valNormal: 3290000, valHard: 3619000 }
     ],
     crew: {
         hacker: [

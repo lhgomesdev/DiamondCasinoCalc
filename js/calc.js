@@ -1,60 +1,40 @@
+const ELITE_BONUS = 100000;
+const LESTER_CUT = 0.05;
+
 const calculator = {
-    calculate: function(state, data) {
+    calculate({ targetId, isHard, isEvent, buyerLevel, crew, isElite, players, playerCount }, data) {
+        const target = data.targets.find(t => t.id === targetId);
 
-        const targetData = data.targets.find(t => t.id === state.targetId);
-        let maxVal = state.isHard ? targetData.valHard : targetData.valNormal;
+        const baseValue = (isHard ? target.valHard : target.valNormal) * (isEvent ? 2 : 1);
+        const buyerFees = { low: 0.10, mid: 0.05, high: 0 };
+        const buyerFeeAmount = baseValue * (buyerFees[buyerLevel] ?? 0);
 
-        if (state.isEvent) {
-            maxVal *= 2;
-        }
+        const crewTotalCut = crew.hacker + crew.gunman + crew.driver + LESTER_CUT;
+        const deductionAmount = baseValue * crewTotalCut;
 
-        let buyerFeePct = 0;
-        if (state.buyerLevel === 'mid') buyerFeePct = 0.05; // 5%
-        if (state.buyerLevel === 'low') buyerFeePct = 0.10; // 10%
+        const netTake = baseValue - buyerFeeAmount - deductionAmount;
+        const eliteAmount = isElite ? ELITE_BONUS : 0;
 
-        const buyerFeeAmount = maxVal * buyerFeePct;
-
-        const lesterCut = 0.05;
-        const crewTotalCut = state.crew.hacker + state.crew.gunman + state.crew.driver;
-        const totalDeductionPct = lesterCut + crewTotalCut;
-
-        const deductionAmount = maxVal * totalDeductionPct;
-
-        const netTake = maxVal - buyerFeeAmount - deductionAmount;
-
-        const eliteBonus = state.isElite ? 100000 : 0;
-
-        let playersResult = [];
-        let totalPct = 0;
-
-        state.players.slice(0, state.playerCount).forEach(p => {
-            totalPct += p.cut;
-            const sharePct = p.cut / 100;
-
-            let amount = (netTake * sharePct);
-            if (amount < 0) amount = 0;
-
-            amount += eliteBonus;
-
-            playersResult.push({
-                ...p,
-                finalAmount: amount
-            });
-        });
+        const activePlayers = players.slice(0, playerCount).map(p => ({
+            ...p,
+            finalAmount: Math.max(0, netTake * (p.cut / 100)) + eliteAmount
+        }));
 
         return {
-            gross: maxVal,
+            gross: baseValue,
             buyerFee: buyerFeeAmount,
             deductions: deductionAmount,
-            elite: eliteBonus,
+            elite: eliteAmount,
             net: netTake,
-            players: playersResult,
-            totalPct: totalPct,
-            isEventActive: state.isEvent
+            players: activePlayers,
+            totalPct: activePlayers.reduce((acc, p) => acc + p.cut, 0),
+            isEventActive: isEvent
         };
     },
 
-    formatMoney: function(val) {
-        return "$ " + val.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    }
+    formatMoney: (val) => new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    }).format(val).replace('$', '$ ')
 };

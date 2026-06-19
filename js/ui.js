@@ -9,22 +9,33 @@ const ui = {
     },
 
     renderTargets: function() {
-        const targetContainer = document.getElementById('target-options');
+        const container = document.getElementById('target-options');
         gameData.targets.forEach(t => {
-            const btn = document.createElement('div');
-            btn.innerHTML = `<i class="fas ${t.icon} text-xl mb-1"></i>${t.name}`;
+            const btn = document.createElement('button');
+            btn.innerHTML = `<i class="fas ${t.icon} text-2xl mb-1"></i><br>${t.name}`;
             btn.onclick = () => this.selectTarget(t.id, btn);
-            targetContainer.appendChild(btn);
+            container.appendChild(btn);
         });
-        if (targetContainer.children[1]) {
-            this.selectTarget('artwork', targetContainer.children[1]);
-        }
+        if (container.children[1]) this.selectTarget('artwork', container.children[1]);
+    },
+
+    selectTarget: function(id, btnElement) {
+        state.targetId = id;
+        const allBtns = document.getElementById('target-options').children;
+
+        const inactiveClass = 'py-3 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black transition-none';
+        const activeClass = 'py-3 border-2 border-gta-gold bg-gta-gold text-black font-bold transition-none';
+
+        for (let btn of allBtns) btn.className = inactiveClass;
+        btnElement.className = activeClass;
+
+        this.update();
     },
 
     populateSelects: function() {
-        this.fillSelect('hacker-select', gameData.crew.hacker, 0.09);
-        this.fillSelect('gunman-select', gameData.crew.gunman, 0.05);
-        this.fillSelect('driver-select', gameData.crew.driver, 0.05);
+        this.fillSelect('hacker-select', gameData.crew.hacker, state.crew.hacker);
+        this.fillSelect('gunman-select', gameData.crew.gunman, state.crew.gunman);
+        this.fillSelect('driver-select', gameData.crew.driver, state.crew.driver);
     },
 
     fillSelect: function(id, options, defaultValue) {
@@ -33,6 +44,7 @@ const ui = {
             const el = document.createElement('option');
             el.value = opt.cut;
             el.innerText = opt.name;
+            el.className = "bg-black text-white";
             if (opt.cut === defaultValue) el.selected = true;
             select.appendChild(el);
         });
@@ -42,36 +54,19 @@ const ui = {
         const list = document.getElementById('hacker-legend-list');
         list.innerHTML = '';
 
-        gameData.crew.hacker.forEach(h => {
+        gameData.crew.hacker.forEach(({ name, time }) => {
+            const [shortName, percentageStr] = name.split('(');
             const li = document.createElement('li');
-            li.className = "flex justify-between border-b border-gray-800 pb-1 last:border-0 last:pb-0";
-
-            const shortName = h.name.split('(')[0].trim();
-            const percentage = h.name.match(/\(([^)]+)\)/)[1];
-
+            li.className = "flex justify-between border-b border-white/10 pb-1 last:border-0 last:pb-0";
             li.innerHTML = `
-                <span>${shortName} <span class="text-gray-600 text-[10px]">(${percentage})</span></span>
-                <span class="text-gray-300 font-mono">${h.time}</span>
-            `;
+                    <span>${shortName.trim()} <span class="text-gray-500 opacity-60">(${percentageStr}</span></span>
+                    <span class="text-white font-gta-heading tracking-widest">${time || '--:--'}</span>
+                `;
             list.appendChild(li);
         });
     },
 
     setupListeners: function() {
-        document.getElementById('hard-mode').addEventListener('change', (e) => {
-            state.isHard = e.target.checked;
-            this.update();
-        });
-        document.getElementById('elite-mode').addEventListener('change', (e) => {
-            state.isElite = e.target.checked;
-            this.update();
-        });
-
-        document.getElementById('event-mode').addEventListener('change', (e) => {
-            state.isEvent = e.target.checked;
-            this.update();
-        });
-
         ['hacker', 'gunman', 'driver'].forEach(role => {
             document.getElementById(`${role}-select`).addEventListener('change', (e) => {
                 state.crew[role] = parseFloat(e.target.value);
@@ -80,21 +75,39 @@ const ui = {
         });
     },
 
-    selectTarget: function(id, btnElement) {
-        state.targetId = id;
-        const allBtns = document.getElementById('target-options').children;
-        for (let btn of allBtns) {
-            btn.className = 'target-btn p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 text-sm font-bold text-center border-gray-700 bg-gray-800 text-gray-500 hover:bg-gray-700 hover:border-gray-600';
+    toggleMode: function(mode, btnId) {
+        state[mode] = !state[mode];
+        const btn = document.getElementById(btnId);
+
+        // Correção do Bug: Buscando especificamente pela classe checkbox-icon
+        const checkboxIcon = btn.querySelector('.checkbox-icon');
+
+        if (state[mode]) {
+            btn.className = `w-full py-3 px-4 border-2 border-gta-gold bg-gta-gold text-black font-bold text-left flex justify-between items-center transition-none`;
+            checkboxIcon.className = 'checkbox-icon fas fa-check-square';
+        } else {
+            btn.className = `w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none`;
+            checkboxIcon.className = 'checkbox-icon far fa-square';
         }
-        btnElement.className = 'target-btn p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 text-sm font-bold text-center border-gold bg-gold/10 text-gold shadow-[0_0_15px_rgba(212,175,55,0.2)] scale-[1.02]';
+
+        if (mode === 'isHard' && state.isHard) {
+            btn.classList.replace('border-gta-gold', 'border-gta-red');
+            btn.classList.replace('bg-gta-gold', 'bg-gta-red');
+        }
+
         this.update();
     },
 
     setBuyer: function(level) {
         state.buyerLevel = level;
-        document.querySelectorAll('.buyer-btn').forEach(btn => btn.removeAttribute('data-active'));
-        const activeBtn = document.querySelector(`.buyer-btn[data-level="${level}"]`);
-        if (activeBtn) activeBtn.setAttribute('data-active', 'true');
+        document.querySelectorAll('.buyer-btn').forEach(btn => {
+            const isActive = btn.dataset.level === level;
+            if(isActive) {
+                btn.className = "buyer-btn flex-1 py-2 px-1 border-2 border-gta-gold bg-gta-gold text-black font-bold text-xs text-center transition-none";
+            } else {
+                btn.className = "buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none";
+            }
+        });
         this.update();
     },
 
@@ -102,16 +115,23 @@ const ui = {
         state.playerCount = num;
 
         document.querySelectorAll('.p-btn').forEach(btn => {
-            if (parseInt(btn.dataset.count) === num) {
-                btn.className = "p-btn px-4 py-1 rounded text-sm font-bold bg-gold text-black shadow-lg transform scale-105 transition-all";
-            } else {
-                btn.className = "p-btn px-4 py-1 rounded text-sm font-bold text-gray-500 hover:text-white transition-colors bg-transparent";
-            }
+            const isActive = parseInt(btn.dataset.count) === num;
+            btn.className = `p-btn w-10 h-10 border-2 font-gta-heading font-bold text-xl transition-none flex items-center justify-center ${
+                isActive
+                    ? 'border-gta-gold bg-gta-gold text-black'
+                    : 'border-white/20 bg-black/50 text-gray-400 hover:bg-white hover:text-black'
+            }`;
         });
 
-        if (num === 2) { state.players[0].cut = 50; state.players[1].cut = 50; }
-        if (num === 3) { state.players[0].cut = 40; state.players[1].cut = 30; state.players[2].cut = 30; }
-        if (num === 4) { state.players[0].cut = 25; state.players[1].cut = 25; state.players[2].cut = 25; state.players[3].cut = 25; }
+        const defaultCuts = {
+            2: [50, 50],
+            3: [40, 30, 30],
+            4: [25, 25, 25, 25]
+        };
+
+        defaultCuts[num].forEach((cut, idx) => {
+            if (state.players[idx]) state.players[idx].cut = cut;
+        });
 
         this.renderPlayersList();
         this.update();
@@ -124,15 +144,14 @@ const ui = {
         for (let i = 0; i < state.playerCount; i++) {
             const p = state.players[i];
             const row = document.createElement('div');
-            row.className = 'bg-gray-800/50 p-3 rounded-lg border border-gray-700';
+            row.className = 'bg-black/40 p-3 border border-white/10';
             row.innerHTML = `
-                <div class="flex justify-between items-center mb-2 text-sm">
-                    <span class="font-bold text-gray-200">${p.name}</span>
-                    <span class="font-bold text-gold" id="disp-pct-${i}">${p.cut}%</span>
-                </div>
-                <input type="range" min="15" max="100" step="5" value="${p.cut}" 
-                    oninput="ui.updatePlayerCut(${i}, this.value)">
-            `;
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-white text-sm tracking-wide ${p.isHost ? 'text-gta-gold' : ''}">${p.name}</span>
+                        <span class="font-gta-heading text-gta-gold text-xl" id="disp-pct-${i}">${p.cut}%</span>
+                    </div>
+                    <input type="range" min="15" max="100" step="5" value="${p.cut}" oninput="ui.updatePlayerCut(${i}, this.value)">
+                `;
             container.appendChild(row);
         }
     },
@@ -144,43 +163,36 @@ const ui = {
     },
 
     update: function() {
-        const results = calculator.calculate(state, gameData);
+        const res = calculator.calculate(state, gameData);
 
-        const eventBadge = document.getElementById('event-badge');
-        if (results.isEventActive) {
-            eventBadge.classList.remove('hidden');
-        } else {
-            eventBadge.classList.add('hidden');
-        }
-
-        document.getElementById('val-gross').innerText = calculator.formatMoney(results.gross);
-        document.getElementById('val-buyer-fee').innerText = "- " + calculator.formatMoney(results.buyerFee);
-        document.getElementById('val-deductions').innerText = "- " + calculator.formatMoney(results.deductions);
-        document.getElementById('val-elite').innerText = results.elite > 0 ? "+ $ 100,000" : "$ 0";
+        document.getElementById('event-badge').style.display = res.isEventActive ? 'inline-block' : 'none';
+        document.getElementById('val-gross').innerText = calculator.formatMoney(res.gross);
+        document.getElementById('val-buyer-fee').innerText = "- " + calculator.formatMoney(res.buyerFee);
+        document.getElementById('val-deductions').innerText = "- " + calculator.formatMoney(res.deductions);
+        document.getElementById('val-elite').innerText = res.elite > 0 ? "+ " + calculator.formatMoney(res.elite) : "$ 0";
 
         const list = document.getElementById('final-payouts-list');
         list.innerHTML = '';
 
-        results.players.forEach(p => {
+        res.players.forEach(p => {
             const row = document.createElement('div');
-            row.className = `flex justify-between items-center ${p.isHost ? 'text-gold font-bold text-lg' : 'text-gray-300 text-base'}`;
+            row.className = `flex justify-between items-center py-1 ${p.isHost ? 'text-gta-green font-bold' : 'text-white'}`;
             row.innerHTML = `
-                <span>${p.name} ${p.isHost ? '<i class="fas fa-crown ml-1 text-xs"></i>' : ''}</span>
-                <span>${calculator.formatMoney(p.finalAmount)}</span>
-            `;
+                    <span class="text-sm font-roboto tracking-widest uppercase">${p.name} ${p.isHost ? '<i class="fas fa-crown text-xs ml-1 text-gta-gold"></i>' : ''}</span>
+                    <span>${calculator.formatMoney(p.finalAmount)}</span>
+                `;
             list.appendChild(row);
         });
 
         const totalDisplay = document.getElementById('total-split-display');
-        totalDisplay.innerText = results.totalPct + "%";
-        if (results.totalPct !== 100) {
-            totalDisplay.className = 'text-red-500 font-bold';
+        totalDisplay.innerText = res.totalPct + "%";
+
+        if (res.totalPct !== 100) {
+            totalDisplay.className = 'text-gta-red bg-gta-red/20 px-2 animate-pulse';
         } else {
-            totalDisplay.className = 'text-green-500 font-bold';
+            totalDisplay.className = 'text-gta-green';
         }
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    ui.init();
-});
+document.addEventListener('DOMContentLoaded', () => { ui.init(); });
