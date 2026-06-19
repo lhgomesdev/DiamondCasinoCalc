@@ -12,6 +12,10 @@ body {
     overflow-x: hidden;
 }
 
+button, select, input {
+    transition: none !important;
+}
+
 body::after {
     content: " ";
     display: block;

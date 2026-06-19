@@ -63,17 +63,17 @@
             <div id="target-options" class="grid grid-cols-2 gap-2 mb-6"></div>
 
             <div class="space-y-3 mb-8">
-                <button id="btn-hard" onclick="ui.toggleMode('isHard', 'btn-hard')" class="w-full py-3 px-4 border-2 border-gta-red bg-gta-red text-black font-bold text-left flex justify-between items-center transition-none">
+                <button id="btn-hard" role="checkbox" aria-checked="true" class="w-full py-3 px-4 border-2 border-gta-red bg-gta-red text-black font-bold text-left flex justify-between items-center transition-none">
                     <span><i class="fas fa-skull mr-2"></i> MODO DIFÍCIL</span>
                     <i class="checkbox-icon fas fa-check-square"></i>
                 </button>
 
-                <button id="btn-elite" onclick="ui.toggleMode('isElite', 'btn-elite')" class="w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none">
+                <button id="btn-elite" role="checkbox" aria-checked="false" class="w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none">
                     <span><i class="fas fa-stopwatch mr-2"></i> DESAFIO DE ELITE</span>
                     <i class="checkbox-icon far fa-square"></i>
                 </button>
 
-                <button id="btn-event" onclick="ui.toggleMode('isEvent', 'btn-event')" class="w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none">
+                <button id="btn-event" role="checkbox" aria-checked="false" class="w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none">
                     <span><i class="fas fa-star mr-2"></i> EVENTO 2X GTA$</span>
                     <i class="checkbox-icon far fa-square"></i>
                 </button>
@@ -82,13 +82,13 @@
             <div>
                 <h3 class="text-sm text-gray-400 font-bold mb-2"><i class="fas fa-user-tie mr-1"></i> NÍVEL DO COMPRADOR</h3>
                 <div class="flex gap-2">
-                    <button onclick="ui.setBuyer('low')" data-level="low" class="buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none">
+                    <button data-level="low" aria-pressed="false" class="buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none">
                         BAIXO<br><span class="text-[10px]">-10% LAVAGEM</span>
                     </button>
-                    <button onclick="ui.setBuyer('mid')" data-level="mid" class="buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none">
+                    <button data-level="mid" aria-pressed="false" class="buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none">
                         MÉDIO<br><span class="text-[10px]">-5% LAVAGEM</span>
                     </button>
-                    <button onclick="ui.setBuyer('high')" data-level="high" class="buyer-btn flex-1 py-2 px-1 border-2 border-gta-gold bg-gta-gold text-black font-bold text-xs text-center transition-none">
+                    <button data-level="high" aria-pressed="true" class="buyer-btn flex-1 py-2 px-1 border-2 border-gta-gold bg-gta-gold text-black font-bold text-xs text-center transition-none">
                         ALTO<br><span class="text-[10px]">0% LAVAGEM</span>
                     </button>
                 </div>
@@ -137,9 +137,9 @@
 
             <div class="flex gap-2 mb-6">
                 <span class="text-sm text-gray-400 font-bold flex-grow self-center">JOGADORES:</span>
-                <button onclick="ui.setPlayers(2)" data-count="2" class="p-btn w-10 h-10 border-2 border-gta-gold bg-gta-gold text-black font-gta-heading font-bold text-xl transition-none">2</button>
-                <button onclick="ui.setPlayers(3)" data-count="3" class="p-btn w-10 h-10 border-2 border-white/20 bg-black/50 text-gray-400 font-gta-heading font-bold text-xl hover:bg-white hover:text-black transition-none">3</button>
-                <button onclick="ui.setPlayers(4)" data-count="4" class="p-btn w-10 h-10 border-2 border-white/20 bg-black/50 text-gray-400 font-gta-heading font-bold text-xl hover:bg-white hover:text-black transition-none">4</button>
+                <button data-count="2" aria-pressed="true" class="p-btn w-10 h-10 border-2 border-gta-gold bg-gta-gold text-black font-gta-heading font-bold text-xl transition-none">2</button>
+                <button data-count="3" aria-pressed="false" class="p-btn w-10 h-10 border-2 border-white/20 bg-black/50 text-gray-400 font-gta-heading font-bold text-xl hover:bg-white hover:text-black transition-none">3</button>
+                <button data-count="4" aria-pressed="false" class="p-btn w-10 h-10 border-2 border-white/20 bg-black/50 text-gray-400 font-gta-heading font-bold text-xl hover:bg-white hover:text-black transition-none">4</button>
             </div>
 
             <div id="players-container" class="space-y-4 mb-6"></div>

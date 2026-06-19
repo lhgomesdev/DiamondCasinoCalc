@@ -10,20 +10,20 @@ Esta calculadora permite simular diferentes cenários, escolhendo alvos, membros
 
 Com base na análise do código fonte, a aplicação oferece:
 
-  * **💰 Seleção de Alvo:** Escolha entre Dinheiro, Arte, Ouro ou Diamantes.
-  * **📊 Modos de Dificuldade:** Alternância entre Normal e Difícil (Hard) com ajuste automático de valores.
-  * **👥 Gestão de Equipa (Crew):**
-      * Seleção de Hacker, Atirador e Piloto.
-      * Cálculo automático das taxas de corte (cut) de cada NPC.
-      * **Lenda de Tempo:** Visualização do tempo disponível no cofre baseado no Hacker escolhido (ex: Avi Schwartzman vs. Rickie Luckens).
-  * **💸 Calculadora de Pagamentos:**
-      * Suporte para 2 a 4 jogadores.
-      * Sliders interativos para ajustar a percentagem (%) de cada jogador.
-      * Validação da soma total (indica se a divisão é igual a 100%).
-  * **📈 Modificadores Extras:**
-      * **Comprador (Buyer):** Níveis Baixo (-10%), Médio (-5%) ou Alto (0% taxa).
-      * **Desafio de Elite:** Opção para adicionar o bónus de $100.000.
-      * **Evento 2x:** Modo para duplicar os valores em semanas de eventos especiais.
+* **💰 Seleção de Alvo:** Escolha entre Dinheiro, Arte, Ouro ou Diamantes.
+* **📊 Modos de Dificuldade:** Alternância entre Normal e Difícil (Hard) com ajuste automático de valores.
+* **👥 Gestão de Equipa (Crew):**
+    * Seleção de Hacker, Atirador e Piloto.
+    * Cálculo automático das taxas de corte (cut) de cada NPC.
+    * **Lenda de Tempo:** Visualização do tempo disponível no cofre baseado no Hacker escolhido (ex: Avi Schwartzman vs. Rickie Luckens).
+* **💸 Calculadora de Pagamentos:**
+    * Suporte para 2 a 4 jogadores.
+    * Sliders interativos para ajustar a percentagem (%) de cada jogador.
+    * Validação da soma total (indica se a divisão é igual a 100%).
+* **📈 Modificadores Extras:**
+    * **Comprador (Buyer):** Níveis Baixo (-10%), Médio (-5%) ou Alto (0% taxa).
+    * **Desafio de Elite:** Opção para adicionar o bónus de $100.000.
+    * **Evento 2x:** Modo para duplicar os valores em semanas de eventos especiais.
 
 ## 📂 Estrutura do Projeto
 

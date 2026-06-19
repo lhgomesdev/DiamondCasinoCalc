@@ -7,25 +7,25 @@ const gameData = {
     ],
     crew: {
         hacker: [
-            { name: "Avi Schwartzman (10%)", cut: 0.10, time: "3:30" },
-            { name: "Paige Harris (9%)", cut: 0.09, time: "3:25" },
-            { name: "Christian Feltz (7%)", cut: 0.07, time: "2:59" },
-            { name: "Yohan Blair (5%)", cut: 0.05, time: "2:52" },
-            { name: "Rickie Luckens (3%)", cut: 0.03, time: "2:26" }
+            { name: "Avi Schwartzman", cut: 0.10, time: "3:30" },
+            { name: "Paige Harris", cut: 0.09, time: "3:25" },
+            { name: "Christian Feltz", cut: 0.07, time: "2:59" },
+            { name: "Yohan Blair", cut: 0.05, time: "2:52" },
+            { name: "Rickie Luckens", cut: 0.03, time: "2:26" }
         ],
         gunman: [
-            { name: "Chester McCoy (10%)", cut: 0.10 },
-            { name: "Gustavo Mota (9%)", cut: 0.09 },
-            { name: "Patrick McReary (8%)", cut: 0.08 },
-            { name: "Charlie Reed (7%)", cut: 0.07 },
-            { name: "Karl Abolaji (5%)", cut: 0.05 }
+            { name: "Chester McCoy", cut: 0.10 },
+            { name: "Gustavo Mota", cut: 0.09 },
+            { name: "Patrick McReary", cut: 0.08 },
+            { name: "Charlie Reed", cut: 0.07 },
+            { name: "Karl Abolaji", cut: 0.05 }
         ],
         driver: [
-            { name: "Chester McCoy (10%)", cut: 0.10 },
-            { name: "Eddie Toh (9%)", cut: 0.09 },
-            { name: "Taliana Martinez (7%)", cut: 0.07 },
-            { name: "Zach Nelson (6%)", cut: 0.06 },
-            { name: "Karim Denz (5%)", cut: 0.05 }
+            { name: "Chester McCoy", cut: 0.10 },
+            { name: "Eddie Toh", cut: 0.09 },
+            { name: "Taliana Martinez", cut: 0.07 },
+            { name: "Zach Nelson", cut: 0.06 },
+            { name: "Karim Denz", cut: 0.05 }
         ]
     }
 };

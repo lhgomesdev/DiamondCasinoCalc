@@ -1,3 +1,26 @@
+const STYLE = {
+    targetInactive: 'py-3 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black transition-none',
+    targetActive: 'py-3 border-2 border-gta-gold bg-gta-gold text-black font-bold transition-none',
+
+    toggleOn: 'w-full py-3 px-4 border-2 border-gta-gold bg-gta-gold text-black font-bold text-left flex justify-between items-center transition-none',
+    toggleOff: 'w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none',
+
+    buyerActive: 'buyer-btn flex-1 py-2 px-1 border-2 border-gta-gold bg-gta-gold text-black font-bold text-xs text-center transition-none',
+    buyerInactive: 'buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none',
+
+    playerCountActive: 'p-btn w-10 h-10 border-2 border-gta-gold bg-gta-gold text-black font-gta-heading font-bold text-xl transition-none flex items-center justify-center',
+    playerCountInactive: 'p-btn w-10 h-10 border-2 border-white/20 bg-black/50 text-gray-400 font-gta-heading font-bold text-xl hover:bg-white hover:text-black transition-none flex items-center justify-center',
+
+    totalOk: 'text-gta-green',
+    totalWarn: 'text-gta-red bg-gta-red/20 px-2 animate-pulse'
+};
+
+const DEFAULT_CUTS = {
+    2: [50, 50],
+    3: [40, 30, 30],
+    4: [25, 25, 25, 25]
+};
+
 const ui = {
     init: function() {
         this.renderTargets();
@@ -12,8 +35,10 @@ const ui = {
         const container = document.getElementById('target-options');
         gameData.targets.forEach(t => {
             const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.targetId = t.id;
+            btn.setAttribute('aria-pressed', 'false');
             btn.innerHTML = `<i class="fas ${t.icon} text-2xl mb-1"></i><br>${t.name}`;
-            btn.onclick = () => this.selectTarget(t.id, btn);
             container.appendChild(btn);
         });
         if (container.children[1]) this.selectTarget('artwork', container.children[1]);
@@ -23,11 +48,11 @@ const ui = {
         state.targetId = id;
         const allBtns = document.getElementById('target-options').children;
 
-        const inactiveClass = 'py-3 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black transition-none';
-        const activeClass = 'py-3 border-2 border-gta-gold bg-gta-gold text-black font-bold transition-none';
-
-        for (let btn of allBtns) btn.className = inactiveClass;
-        btnElement.className = activeClass;
+        for (const btn of allBtns) {
+            const isActive = btn === btnElement;
+            btn.className = isActive ? STYLE.targetActive : STYLE.targetInactive;
+            btn.setAttribute('aria-pressed', String(isActive));
+        }
 
         this.update();
     },
@@ -43,7 +68,7 @@ const ui = {
         options.forEach(opt => {
             const el = document.createElement('option');
             el.value = opt.cut;
-            el.innerText = opt.name;
+            el.innerText = `${opt.name} (${Math.round(opt.cut * 100)}%)`;
             el.className = "bg-black text-white";
             if (opt.cut === defaultValue) el.selected = true;
             select.appendChild(el);
@@ -54,12 +79,11 @@ const ui = {
         const list = document.getElementById('hacker-legend-list');
         list.innerHTML = '';
 
-        gameData.crew.hacker.forEach(({ name, time }) => {
-            const [shortName, percentageStr] = name.split('(');
+        gameData.crew.hacker.forEach(({ name, cut, time }) => {
             const li = document.createElement('li');
             li.className = "flex justify-between border-b border-white/10 pb-1 last:border-0 last:pb-0";
             li.innerHTML = `
-                    <span>${shortName.trim()} <span class="text-gray-500 opacity-60">(${percentageStr}</span></span>
+                    <span>${name} <span class="text-gray-500 opacity-60">(${Math.round(cut * 100)}%)</span></span>
                     <span class="text-white font-gta-heading tracking-widest">${time || '--:--'}</span>
                 `;
             list.appendChild(li);
@@ -73,20 +97,45 @@ const ui = {
                 this.update();
             });
         });
+
+        document.getElementById('target-options').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            this.selectTarget(btn.dataset.targetId, btn);
+        });
+
+        document.getElementById('btn-hard').addEventListener('click', () => this.toggleMode('isHard', 'btn-hard'));
+        document.getElementById('btn-elite').addEventListener('click', () => this.toggleMode('isElite', 'btn-elite'));
+        document.getElementById('btn-event').addEventListener('click', () => this.toggleMode('isEvent', 'btn-event'));
+
+        document.querySelectorAll('.buyer-btn').forEach(btn => {
+            btn.addEventListener('click', () => this.setBuyer(btn.dataset.level));
+        });
+
+        document.querySelectorAll('.p-btn').forEach(btn => {
+            btn.addEventListener('click', () => this.setPlayers(parseInt(btn.dataset.count, 10)));
+        });
+
+        document.getElementById('players-container').addEventListener('input', (e) => {
+            if (e.target.matches('input[type="range"]')) {
+                const index = parseInt(e.target.dataset.playerIndex, 10);
+                this.updatePlayerCut(index, e.target.value);
+            }
+        });
     },
 
     toggleMode: function(mode, btnId) {
         state[mode] = !state[mode];
         const btn = document.getElementById(btnId);
-
-        // Correção do Bug: Buscando especificamente pela classe checkbox-icon
         const checkboxIcon = btn.querySelector('.checkbox-icon');
 
+        btn.setAttribute('aria-checked', String(state[mode]));
+
         if (state[mode]) {
-            btn.className = `w-full py-3 px-4 border-2 border-gta-gold bg-gta-gold text-black font-bold text-left flex justify-between items-center transition-none`;
+            btn.className = STYLE.toggleOn;
             checkboxIcon.className = 'checkbox-icon fas fa-check-square';
         } else {
-            btn.className = `w-full py-3 px-4 border-2 border-white/20 bg-black/50 text-gray-400 font-bold text-left hover:bg-white hover:text-black flex justify-between items-center transition-none`;
+            btn.className = STYLE.toggleOff;
             checkboxIcon.className = 'checkbox-icon far fa-square';
         }
 
@@ -102,11 +151,8 @@ const ui = {
         state.buyerLevel = level;
         document.querySelectorAll('.buyer-btn').forEach(btn => {
             const isActive = btn.dataset.level === level;
-            if(isActive) {
-                btn.className = "buyer-btn flex-1 py-2 px-1 border-2 border-gta-gold bg-gta-gold text-black font-bold text-xs text-center transition-none";
-            } else {
-                btn.className = "buyer-btn flex-1 py-2 px-1 border-2 border-white/20 bg-black/50 text-gray-400 font-bold hover:bg-white hover:text-black text-xs text-center transition-none";
-            }
+            btn.className = isActive ? STYLE.buyerActive : STYLE.buyerInactive;
+            btn.setAttribute('aria-pressed', String(isActive));
         });
         this.update();
     },
@@ -115,21 +161,12 @@ const ui = {
         state.playerCount = num;
 
         document.querySelectorAll('.p-btn').forEach(btn => {
-            const isActive = parseInt(btn.dataset.count) === num;
-            btn.className = `p-btn w-10 h-10 border-2 font-gta-heading font-bold text-xl transition-none flex items-center justify-center ${
-                isActive
-                    ? 'border-gta-gold bg-gta-gold text-black'
-                    : 'border-white/20 bg-black/50 text-gray-400 hover:bg-white hover:text-black'
-            }`;
+            const isActive = parseInt(btn.dataset.count, 10) === num;
+            btn.className = isActive ? STYLE.playerCountActive : STYLE.playerCountInactive;
+            btn.setAttribute('aria-pressed', String(isActive));
         });
 
-        const defaultCuts = {
-            2: [50, 50],
-            3: [40, 30, 30],
-            4: [25, 25, 25, 25]
-        };
-
-        defaultCuts[num].forEach((cut, idx) => {
+        DEFAULT_CUTS[num].forEach((cut, idx) => {
             if (state.players[idx]) state.players[idx].cut = cut;
         });
 
@@ -150,14 +187,14 @@ const ui = {
                         <span class="font-bold text-white text-sm tracking-wide ${p.isHost ? 'text-gta-gold' : ''}">${p.name}</span>
                         <span class="font-gta-heading text-gta-gold text-xl" id="disp-pct-${i}">${p.cut}%</span>
                     </div>
-                    <input type="range" min="15" max="100" step="5" value="${p.cut}" oninput="ui.updatePlayerCut(${i}, this.value)">
+                    <input type="range" min="15" max="100" step="5" value="${p.cut}" data-player-index="${i}" aria-label="Porcentagem de ${p.name}">
                 `;
             container.appendChild(row);
         }
     },
 
     updatePlayerCut: function(index, value) {
-        state.players[index].cut = parseInt(value);
+        state.players[index].cut = parseInt(value, 10);
         document.getElementById(`disp-pct-${index}`).innerText = value + '%';
         this.update();
     },
@@ -186,12 +223,7 @@ const ui = {
 
         const totalDisplay = document.getElementById('total-split-display');
         totalDisplay.innerText = res.totalPct + "%";
-
-        if (res.totalPct !== 100) {
-            totalDisplay.className = 'text-gta-red bg-gta-red/20 px-2 animate-pulse';
-        } else {
-            totalDisplay.className = 'text-gta-green';
-        }
+        totalDisplay.className = res.totalPct === 100 ? STYLE.totalOk : STYLE.totalWarn;
     }
 };
 
